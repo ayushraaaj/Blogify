@@ -1,7 +1,4 @@
 {
-  "engines": {
-  "node": ">=14 <15"
-},
   "dependencies": {
     "alert": "^6.0.1",
     "cookie-parser": "^1.4.6",
