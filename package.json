@@ -1,4 +1,7 @@
 {
+    "engines": {
+      "node": ">=14 <15"
+    },
     "dependencies": {
         "cloudinary": "^1.41.0",
         "cloudinary-build-url": "^0.2.4",
