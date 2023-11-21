@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const port = 8002;
 const path = require('path');
@@ -6,6 +5,7 @@ const cookieParser = require('cookie-parser');
 
 const {connectMongoDB} = require('./connection');
 const { checkForAuthentication } = require('./middleware/authenticate');
+require('dotenv').config();
 
 const homeRoute = require('./routes/home');
 const userRoute = require('./routes/user');
