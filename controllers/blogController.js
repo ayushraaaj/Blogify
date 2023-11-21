@@ -1,6 +1,9 @@
 const Blog = require('../models/blog');
 const Comment = require('../models/comment');
 
+const cloudinary = require('cloudinary').v2;
+const { extractPublicId } = require('cloudinary-build-url');
+
 async function addNewBlog(req, res){
     try{
         return res.render('addBlog', {
@@ -22,7 +25,7 @@ async function postAddNewBlog(req, res){
     const blog = await Blog.create({
         title, 
         body,
-        coverImageURL: `/uploads/${req.file.filename}`,
+        coverImageURL: req.file.path,
         createdBy: req.user._id
     });
 
@@ -74,6 +77,7 @@ async function deletePost(req, res){
         const id = req.params.id;
     
         const blog = await Blog.findById(id).populate('createdBy');
+        console.log(blog);
         // console.log(blog.createdBy);
         // console.log(req.user);
     
@@ -85,6 +89,17 @@ async function deletePost(req, res){
         }
     
         await Comment.deleteMany({blogId: id});
+
+        const public_id = extractPublicId(blog.coverImageURL);
+
+        await cloudinary.uploader.destroy(public_id, (error, result) => {
+            if(error){
+                console.log('Error on deleting');
+            }
+            else{
+                console.log('Successfully deleted');
+            }
+        });
         
         await Blog.findByIdAndDelete(id);
     

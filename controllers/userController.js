@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const {createTokenForUser, validateToken} = require('../services/authenticaton');
+const cloudinary = require('cloudinary').v2;
+const { extractPublicId } = require('cloudinary-build-url');
 
 async function signup(req, res){
     try {
@@ -96,10 +98,27 @@ async function updateProfileImage(req, res){
 
 async function postUpdateProfileImage(req, res){
     try {
+        const result = await User.findById(req.user._id);
+        // console.log(result);
+        
+        const public_id = extractPublicId(result.profileImageUrl);
+        // console.log('Public Id: ', public_id);
+
+        if(public_id != 'Blogify_Uploads/ProfileImages/default_rzw7d4'){
+            await cloudinary.uploader.destroy(public_id, (error, result) => {
+                if(error){
+                    console.log('Error deleting image');
+                }
+                
+                console.log('Successfully deleted');
+            });
+        }
+
         await User.findByIdAndUpdate(req.user._id, {
-            profileImageUrl: `/images/${req.file.filename}`
+            profileImageUrl: req.file.path
         });
         
+        // console.log(req.file);
         const userDetail = await User.findById(req.user._id);
         const user = {
             _id: userDetail._id,

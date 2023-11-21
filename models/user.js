@@ -22,7 +22,7 @@ const userSchema = new Schema({
     },
     profileImageUrl: {
         type: String,
-        default: '/images/default.png'
+        default: 'https://res.cloudinary.com/diuhoksh5/image/upload/v1700584508/Blogify_Uploads/ProfileImages/default_rzw7d4.png'
     },
     role: {
         type: String,
